@@ -169,3 +169,5 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+NEST_INSTRUCTION.md

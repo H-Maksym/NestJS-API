@@ -1,20 +1,31 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { setupSwagger } from 'src/config';
+// import { logger } from 'src/middlewares';
 
-// const PORT = process.env || 3001;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  ('check live server');
-  app.use('/live', (_req, res) => {
-    res.json({ status: true });
-  });
+  // Starts listening for shutdown hooks
+  app.enableShutdownHooks();
 
-  //config swagger
+  //COMMENT set cors request
+  // app.enableCors();
+
+  //COMMENT set global prefix
+  app.setGlobalPrefix('api');
+
+  //COMMENT config swagger
   setupSwagger(app);
 
-  //run server
+  //COMMENT logger
+  // app.use(logger);
+
+  //COMMENT listen server on port
   await app.listen(3000);
+
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
+
+//COMMENT run server
 bootstrap();
