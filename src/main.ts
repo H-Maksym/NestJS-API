@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { setupSwagger } from 'src/config';
 // import { logger } from 'src/middlewares';
+import { SERVER_PORT } from './common/constants/env.constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,7 +33,7 @@ async function bootstrap() {
   // app.use(logger);
 
   //COMMENT listen server on port
-  await app.listen(3000);
+  await app.listen(process.env.SERVER_PORT || 3000);
 
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
