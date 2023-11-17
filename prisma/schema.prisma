@@ -24,14 +24,14 @@ model User {
   id        String      @id @default(uuid())
   email     String      @unique
   password  String?
-  name      String?
+  name      String?     @default("")
   phone     String?     @default("")
   role      E_UserRole? @default(USER)
   // isActivated Boolean?    @default(false) @map("is_activated")
   // isBlocked Boolean     @default(false) @map("is_blocked")
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime    @updatedAt @map("updated_at")
-  Token     Token[]
+  token     Token[]
 
   @@map("users")
 }
@@ -41,7 +41,7 @@ model Token {
   expires DateTime
   // userAgent String   @map("user_agent")
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
+  userId  String   @map("user_id")
 
   @@map("tokens")
 }

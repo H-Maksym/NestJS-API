@@ -11,7 +11,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
     const response = ctx.getResponse<Response>();
     const message = exception.message;
     switch (exception.code) {
-      case 'P2020':
+      case 'P2002':
         response.status(HttpStatus.CONFLICT).json({
           statusCode: HttpStatus.CONFLICT,
           message,

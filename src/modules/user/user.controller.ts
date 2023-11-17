@@ -9,13 +9,18 @@ import {
   UseFilters,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { /* ApiOperation, */ ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  // ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { PrismaClientExceptionFilter } from '@/database/prisma/prisma-client-exception/prisma-client-exception.filter';
 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+// import { UserEntity } from './entity/user.entity';
 
 @ApiTags('🙎‍♂️ service')
 @Controller('user')
@@ -26,6 +31,7 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: '🎭 create user' })
+  // @ApiCreatedResponse({ type: UserEntity })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

@@ -1,15 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { E_UserRole } from '@prisma/client';
+import {
+  MinLength,
+  IsEmail,
+  MaxLength,
+  IsEnum,
+  IsPhoneNumber,
+} from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty({ required: false })
+  @IsEmail()
+  @ApiProperty({ required: false, example: 'mail@mail.com' })
   email: string;
-  
-  @ApiProperty({ required: false })
+
+  // @MinLength(6, {
+  //   message:
+  //     'Password is too short. Minimal length is $constraint1 characters, but actual is $value',
+  // })
+  @MinLength(6)
+  @MaxLength(15)
+  @ApiProperty({ required: false, example: 'password' })
   password: string;
-  
-  @ApiProperty()
+
+  @ApiProperty({ example: 'Maksym' })
   name?: string;
 
-  @ApiProperty()
-  phone: string;
+  @IsPhoneNumber()
+  @ApiProperty({ example: '+380777777777' })
+  phone?: string;
+
+  @IsEnum(E_UserRole)
+  @ApiProperty({
+    enum: E_UserRole,
+    example: E_UserRole.USER,
+  })
+  role?: E_UserRole;
 }
