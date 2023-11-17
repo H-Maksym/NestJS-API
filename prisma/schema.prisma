@@ -24,11 +24,8 @@ model User {
   id        String      @id @default(uuid())
   email     String      @unique
   password  String?
-  name      String?     @default("")
-  phone     String?     @default("")
   role      E_UserRole? @default(USER)
   // isActivated Boolean?    @default(false) @map("is_activated")
-  // isBlocked Boolean     @default(false) @map("is_blocked")
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime    @updatedAt @map("updated_at")
   token     Token[]
@@ -45,3 +42,12 @@ model Token {
 
   @@map("tokens")
 }
+
+// model Acount {
+// isBlocked Boolean     @default(false) @map("is_blocked")
+// id Int @id @(autoincrement()))
+// name      String?     @default("")
+// phone     String?     @default("")
+//@@map("acounts")
+
+// }

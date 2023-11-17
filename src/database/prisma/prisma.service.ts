@@ -5,6 +5,18 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient {
   private prisma: PrismaClient = new PrismaClient();
 
+  // constructor(private readonly database: string) {
+  //   super();
+  //   this.prisma = new PrismaClient();
+
+  //   switch (database) {
+  //     case 'USER':
+  //       this.prisma.user;
+  //     default:
+  //       this.prisma.token;
+  //   }
+  // }
+
   async onOnModuleInit() {
     await this.$connect();
   }

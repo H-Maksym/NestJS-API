@@ -6,32 +6,32 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UserRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly db: PrismaService) {}
 
   //COMMENT createUser
   async createUser(data: CreateUserDto): Promise<User> {
-    return this.prisma.user.create({ data });
+    return this.db.user.create({ data });
   }
 
   //COMMENT get all user
   async getUsers(): Promise<User[]> {
-    return await this.prisma.user.findMany();
+    return await this.db.user.findMany();
   }
 
   //COMMENT get user by id
   async getUser(id: string): Promise<User | null> {
-    return await this.prisma.user.findFirst({
+    return await this.db.user.findFirst({
       where: { id },
     });
   }
 
   //COMMENT update user by id
   async updateUser(id: string, data: UpdateUserDto): Promise<User> {
-    return await this.prisma.user.update({ where: { id }, data });
+    return await this.db.user.update({ where: { id }, data });
   }
 
   //COMMENT delete user by id
   async deleteUser(id: string): Promise<User> {
-    return await this.prisma.user.delete({ where: { id } });
+    return await this.db.user.delete({ where: { id } });
   }
 }

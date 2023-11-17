@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+
 import { AppModule } from './app.module';
 import { setupSwagger } from 'src/config';
-import { ValidationPipe } from '@nestjs/common';
 // import { logger } from 'src/middlewares';
 
 async function bootstrap() {
@@ -10,6 +11,10 @@ async function bootstrap() {
   //Validation pipe for income data
   //whitelist: true - not adding any fields does not match DTO
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  //Custom Prisma client exception filtre
+  // const { httpAdapter } = app.get(HttpAdapterHost);
+  // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();

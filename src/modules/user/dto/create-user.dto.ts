@@ -6,9 +6,11 @@ import {
   MaxLength,
   IsEnum,
   IsPhoneNumber,
+  IsNotEmpty,
 } from 'class-validator';
 
 export class CreateUserDto {
+  @IsNotEmpty()
   @IsEmail()
   @ApiProperty({ required: false, example: 'mail@mail.com' })
   email: string;
@@ -17,6 +19,7 @@ export class CreateUserDto {
   //   message:
   //     'Password is too short. Minimal length is $constraint1 characters, but actual is $value',
   // })
+  @IsNotEmpty()
   @MinLength(6)
   @MaxLength(15)
   @ApiProperty({ required: false, example: 'password' })
