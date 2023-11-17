@@ -2,9 +2,20 @@
   "name": "server",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "H-Maksym <mgolovachuk@gmail.com>",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "ISC",
+  "keywords": [
+    "NestJS",
+    "Prisma",
+    "PostgreSQL",
+    "Swagger",
+    "TypeScript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/H-Maksym/NestJS-API.git"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -21,7 +32,9 @@
     "//comments": "echo Prisma DB client service",
     "prisma:db": "npx prisma studio",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
+    "prisma:seed": "ts-node --transpile-only prisma/seed.ts",
+    "docker:up": "docker-compose -f ./docker/postgres/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f ./docker/postgres/docker-compose.yml down"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

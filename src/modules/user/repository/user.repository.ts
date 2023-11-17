@@ -19,7 +19,7 @@ export class UserRepository {
   }
 
   //COMMENT get user by id
-  async getUser(id: string): Promise<User> {
+  async getUser(id: string): Promise<User | null> {
     return await this.prisma.user.findFirst({
       where: { id },
     });

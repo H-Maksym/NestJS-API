@@ -15,6 +15,7 @@ enum E_UserRole {
   USER
   ADMIN
   MANAGER
+  CLIENT
   // Add other roles as needed
 }
 
