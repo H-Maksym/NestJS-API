@@ -22,6 +22,20 @@ export class AuthService {
     private readonly authRepository: AuthRepository
   ) {}
 
+  private async generateTokens(user: User): Promise<Tokens> {
+    const accessToken =
+      'Bearer ' +
+      this.jwtService.sign({
+        id: user.id,
+        email: user.email,
+        roles: user.roles,
+      });
+
+    const refreshToken = await this.authRepository.setRefreshToken(user.id);
+
+    return { accessToken, refreshToken };
+  }
+
   //COMMENT sign up by email, password, repeat password
   async signUp(signUpDto: SignUpDto) {
     const user: User | null = await this.userService
@@ -56,23 +70,18 @@ export class AuthService {
     }
 
     if (user.password && !compareSync(signInDto.password, user.password)) {
-      throw new UnauthorizedException('Email or password are invalid');
-    }
+      throw new UnauthorizedExcep
+    const tokens: Tokens = await this.generateTokens(user);
 
-    const accessToken =
-      'Bearer ' +
-      this.jwtService.sign({
-        id: user.id,
-        email: user.email,
-        roles: user.roles,
-      });
-
-    const refreshToken = await this.authRepository.setRefreshToken(user.id);
-
-    return { accessToken, refreshToken };
+    return tokens;
   }
 
-  refreshToken() {
-    return null;
+  async refreshToken(refreshToken: string): Promise<Tokens> {
+    //COMMENTS we delete token, if token does not return - token is absent in db
+    const token = await this.authRepository.deleteToken(refreshToken);
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+    return refreshToken;
   }
 }

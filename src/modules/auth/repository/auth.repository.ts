@@ -30,4 +30,12 @@ export class AuthRepository {
       },
     });
   }
+
+  async getRefreshToken(refreshToken: string): Promise<Token | null> {
+    return await this.db.token.findUnique({ where: { token: refreshToken } });
+  }
+
+  async deleteToken(refreshToken: string): Promise<Token> {
+    return await this.db.token.delete({ where: { token: refreshToken } });
+  }
 }

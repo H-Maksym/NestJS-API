@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Res,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -13,6 +14,8 @@ import { SignInDto, SignUpDto } from './dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { CookieService } from '../cookie/cookie.service';
+import { Cookie } from '@common/decorators';
+import { REFRESH_TOKEN } from '@common/constants';
 
 @ApiTags('⛔ auth service')
 @Controller('auth')
@@ -54,7 +57,13 @@ export class AuthController {
   }
 
   @Get('refresh-tokens')
-  refreshToken() {
-    return this.authService.refreshToken();
+  async refreshToken(
+    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Res() res: Response
+  ) {
+    if (!this.refreshToken) {
+      throw new UnauthorizedException();
+    }
+    return await this.authService.refreshToken(refreshToken);
   }
 }
