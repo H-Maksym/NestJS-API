@@ -29,14 +29,14 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  async signIn(@Body() signInDto: SignInDto): Promise<Tokens> {
+  async signIn(@Body() signInDto: SignInDto) {
     const tokens = await this.authService.signIn(signInDto);
     if (!tokens) {
       throw new BadRequestException(
         `Unable to sign in with data ${JSON.stringify(signInDto)}`
       );
     }
-    return tokens;
+    return { 'access-token': tokens.accessToken };
   }
 
   @Post('sign-out')

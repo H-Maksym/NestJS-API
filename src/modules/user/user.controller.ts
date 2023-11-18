@@ -15,7 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { PrismaClientExceptionFilter } from '@/database/prisma/prisma-client-exception/prisma-client-exception.filter';
+import { PrismaClientExceptionFilter } from '@database/prisma/prisma-client-exception/prisma-client-exception.filter';
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';

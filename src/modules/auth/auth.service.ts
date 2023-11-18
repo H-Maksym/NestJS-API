@@ -1,4 +1,9 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SignInDto, SignUpDto } from './dto';
 import { UserService } from '@modules/user/user.service';
 import { Tokens } from './interfaces';
@@ -19,6 +24,16 @@ export class AuthService {
 
   //COMMENT sign up by email, password, repeat password
   async signUp(signUpDto: SignUpDto) {
+    const user: User | null = await this.userService
+      .findOneByEmail(signUpDto.email)
+      .catch(err => {
+        //TODO Add Logger
+        this.logger.error(err);
+        return null;
+      });
+    if (user) {
+      throw new ConflictException('User with this email is already registered');
+    }
     return this.userService.create(signUpDto).catch(err => {
       //TODO Add Logger
       this.logger.error(err);
@@ -44,11 +59,13 @@ export class AuthService {
       throw new UnauthorizedException('Email or password are invalid');
     }
 
-    const accessToken = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
-      roles: user.roles,
-    });
+    const accessToken =
+      'Bearer ' +
+      this.jwtService.sign({
+        id: user.id,
+        email: user.email,
+        roles: user.roles,
+      });
 
     const refreshToken = await this.authRepository.getRefreshToken(user.id);
 
