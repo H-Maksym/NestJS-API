@@ -32,10 +32,10 @@ export class CreateUserDto {
   // @ApiProperty({ example: '+380777777777' })
   // phone?: string;
 
-  // @IsEnum(E_UserRole)
+  // @IsEnum(E_UserRole[])
   // @ApiProperty({
   //   enum: E_UserRole,
   //   example: E_UserRole.USER,
   // })
-  // role?: E_UserRole;
+  // roles?: E_UserRole[];
 }

@@ -21,20 +21,20 @@ enum E_UserRole {
 
 //! MODELS
 model User {
-  id        String      @id @default(uuid())
-  email     String      @unique
+  id        String       @id @default(uuid())
+  email     String       @unique
   password  String?
-  role      E_UserRole? @default(USER)
+  roles     E_UserRole[] @default([USER])
   // isActivated Boolean?    @default(false) @map("is_activated")
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
   token     Token[]
 
   @@map("users")
 }
 
 model Token {
-  email   String   @unique
+  token   String   @unique
   expires DateTime
   // userAgent String   @map("user_agent")
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)

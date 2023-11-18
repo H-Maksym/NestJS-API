@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '@/database/prisma/prisma.service';
+import { PrismaService } from '@database/prisma/prisma.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { User } from '@prisma/client';
 import { PasswordService } from '../../password/password.service';
@@ -14,7 +14,9 @@ export class UserRepository {
   //COMMENT createUser
   async createUser(data: CreateUserDto): Promise<User> {
     const hashedPassword = this.passwordService.getHashPassword(data.password);
-    return this.db.user.create({ data: { ...data, password: hashedPassword } });
+    return this.db.user.create({
+      data: { ...data, password: hashedPassword, roles: ['USER'] },
+    });
   }
 
   //COMMENT get all user
@@ -23,9 +25,16 @@ export class UserRepository {
   }
 
   //COMMENT get user by id
-  async getUser(id: string): Promise<User | null> {
+  async getUserById(id: string): Promise<User | null> {
     return await this.db.user.findFirst({
       where: { id },
+    });
+  }
+
+  //COMMENT get user by email
+  async getUserByEmail(email: string): Promise<User | null> {
+    return await this.db.user.findFirst({
+      where: { email },
     });
   }
 

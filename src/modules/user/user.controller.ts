@@ -21,7 +21,7 @@ import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 // import { UserEntity } from './entity/user.entity';
 
-@ApiTags('🙎‍♂️ service')
+@ApiTags('🙎‍♂️ user servise')
 @Controller('user')
 //decorator for prisma client error handler
 @UseFilters(PrismaClientExceptionFilter)
@@ -42,7 +42,7 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.findOne(id);
+    return this.userService.findOneById(id);
   }
 
   @Put(':id')

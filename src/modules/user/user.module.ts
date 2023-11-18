@@ -10,5 +10,6 @@ import { PasswordService } from '@modules/password/password.service';
   imports: [DatabaseModule],
   controllers: [UserController],
   providers: [UserRepository, UserService, PasswordService],
+  exports: [UserService],
 })
 export class UserModule {}

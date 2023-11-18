@@ -1,1 +1,4 @@
 export const SERVER_PORT = 'SERVER_PORT';
+export const JWT_SECRET = 'JWT_SECRET';
+export const JWT_ACCESS_TOKEN_EXP = 'JWT_ACCESS_TOKEN_EXP';
+export const JWT_REFRESH_TOKEN_EXP = 'JWT_REFRESH_TOKEN_EXP';
