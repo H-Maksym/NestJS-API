@@ -16,6 +16,7 @@ import { User } from '@prisma/client';
 import { CookieService } from '../cookie/cookie.service';
 import { Cookie } from '@common/decorators';
 import { REFRESH_TOKEN } from '@common/constants';
+import { Tokens } from './interfaces';
 
 @ApiTags('⛔ auth service')
 @Controller('auth')
@@ -45,9 +46,20 @@ export class AuthController {
         `Unable to sign in with data ${JSON.stringify(signInDto)}`
       );
     }
-    await this.cookiesService.setRefreshTokenToCookies(tokens, res);
+    const {
+      accessToken,
+      refreshToken: { token, expires },
+    } = tokens;
+    await this.cookiesService.setToCookies(
+      {
+        name: REFRESH_TOKEN,
+        value: token,
+        expires,
+      },
+      res
+    );
     res.status(HttpStatus.CREATED).json({
-      'access-token': tokens.accessToken,
+      'access-token': accessToken,
     });
   }
 
@@ -56,14 +68,35 @@ export class AuthController {
     return null;
   }
 
-  @Get('refresh-tokens')
+  @Get('refresh')
   async refreshToken(
     @Cookie(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response
   ) {
-    if (!this.refreshToken) {
+    if (!refreshToken) {
       throw new UnauthorizedException();
     }
-    return await this.authService.refreshToken(refreshToken);
+
+    const tokens: Tokens = await this.authService.refreshToken(refreshToken);
+    if (!tokens) {
+      throw new UnauthorizedException();
+    }
+
+    const {
+      accessToken,
+      refreshToken: { token, expires },
+    } = tokens;
+
+    await this.cookiesService.setToCookies(
+      {
+        name: REFRESH_TOKEN,
+        value: token,
+        expires,
+      },
+      res
+    );
+    res.status(HttpStatus.CREATED).json({
+      'access-token': accessToken,
+    });
   }
 }

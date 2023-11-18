@@ -70,7 +70,8 @@ export class AuthService {
     }
 
     if (user.password && !compareSync(signInDto.password, user.password)) {
-      throw new UnauthorizedExcep
+      throw new UnauthorizedException();
+    }
     const tokens: Tokens = await this.generateTokens(user);
 
     return tokens;
@@ -78,10 +79,18 @@ export class AuthService {
 
   async refreshToken(refreshToken: string): Promise<Tokens> {
     //COMMENTS we delete token, if token does not return - token is absent in db
+
     const token = await this.authRepository.deleteToken(refreshToken);
     if (!token) {
       throw new UnauthorizedException();
     }
-    return refreshToken;
+
+    const user = await this.userService.findOneById(token.userId);
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return await this.generateTokens(user);
   }
 }
