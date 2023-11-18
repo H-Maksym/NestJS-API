@@ -45,7 +45,6 @@ export class AuthController {
     await this.cookiesService.setRefreshTokenToCookies(tokens, res);
     res.status(HttpStatus.CREATED).json({
       'access-token': tokens.accessToken,
-      'refresh-token': tokens.refreshToken,
     });
   }
 
@@ -54,7 +53,7 @@ export class AuthController {
     return null;
   }
 
-  @Get('refresh')
+  @Get('refresh-tokens')
   refreshToken() {
     return this.authService.refreshToken();
   }
