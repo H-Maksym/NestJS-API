@@ -35,7 +35,7 @@ export class AuthRepository {
     return await this.db.token.findUnique({ where: { token: refreshToken } });
   }
 
-  async deleteToken(refreshToken: string): Promise<Token> {
+  async deleteRefreshToken(refreshToken: string): Promise<Token> {
     return await this.db.token.delete({ where: { token: refreshToken } });
   }
 }

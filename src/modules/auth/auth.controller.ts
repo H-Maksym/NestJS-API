@@ -78,6 +78,7 @@ export class AuthController {
     }
 
     const tokens: Tokens = await this.authService.refreshToken(refreshToken);
+
     if (!tokens) {
       throw new UnauthorizedException();
     }

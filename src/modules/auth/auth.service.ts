@@ -80,8 +80,12 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<Tokens> {
     //COMMENTS we delete token, if token does not return - token is absent in db
 
-    const token = await this.authRepository.deleteToken(refreshToken);
-    if (!token) {
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    const token = await this.authRepository.deleteRefreshToken(refreshToken);
+    if (new Date(token.expires) < new Date()) {
       throw new UnauthorizedException();
     }
 
