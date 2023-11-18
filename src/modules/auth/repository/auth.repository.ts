@@ -10,17 +10,19 @@ import { JWT_REFRESH_TOKEN_EXP } from '@common/constants';
 export class AuthRepository {
   constructor(
     private readonly db: PrismaService,
-    private readonly config: ConfigService
+    private readonly configService: ConfigService
   ) {}
 
   //COMMENT get refresh token
-  async getRefreshToken(userId: string): Promise<Token> {
+  async setRefreshToken(userId: string): Promise<Token> {
     const expires =
       new Date().getTime() +
-      convertToSecondsUtil(this.config.get(JWT_REFRESH_TOKEN_EXP) || '1M') *
+      convertToSecondsUtil(
+        this.configService.get(JWT_REFRESH_TOKEN_EXP) || '1M'
+      ) *
         1000;
 
-    return this.db.token.create({
+    return await this.db.token.create({
       data: {
         token: v4(),
         expires: new Date(expires),

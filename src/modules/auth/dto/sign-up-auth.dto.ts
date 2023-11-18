@@ -9,12 +9,12 @@ export class SignUpDto {
 
   @IsString()
   @MinLength(6)
-  @ApiProperty({ required: false, example: '1234' })
+  @ApiProperty({ required: false, example: 'password' })
   password: string;
 
   @IsString()
   @MinLength(6)
-  @ApiProperty({ required: false, example: '1234' })
+  @ApiProperty({ required: false, example: 'password' })
   @Validate(IsPasswordsMatchingConstraint)
   passwordRepeat: string;
 }

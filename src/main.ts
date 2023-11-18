@@ -4,7 +4,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { setupSwagger } from 'src/config';
 // import { logger } from 'src/middlewares';
-import { SERVER_PORT } from './common/constants/env.constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,7 +12,7 @@ async function bootstrap() {
   //whitelist: true - not adding any fields does not match DTO
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  //Custom Prisma client exception filtre
+  //Custom Prisma client exception filter
   // const { httpAdapter } = app.get(HttpAdapterHost);
   // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 

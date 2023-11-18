@@ -8,6 +8,6 @@ export class SignInDto {
 
   @IsString()
   @MinLength(6)
-  @ApiProperty({ required: false, example: '1234' })
+  @ApiProperty({ required: false, example: 'password' })
   password: string;
 }

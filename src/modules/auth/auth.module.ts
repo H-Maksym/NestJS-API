@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -11,6 +11,7 @@ import { DatabaseModule } from '@database/database.module';
 
 import { jwtModuleAsyncOptions } from '@config';
 import { AuthRepository } from './repository/auth.repository';
+import { CookieModule } from '@modules/cookie/cookie.module';
 
 @Module({
   controllers: [AuthController],
@@ -19,6 +20,7 @@ import { AuthRepository } from './repository/auth.repository';
     ConfigModule,
     DatabaseModule,
     PassportModule,
+    CookieModule,
     JwtModule.registerAsync(jwtModuleAsyncOptions()),
     UserModule,
   ],

@@ -67,7 +67,7 @@ export class AuthService {
         roles: user.roles,
       });
 
-    const refreshToken = await this.authRepository.getRefreshToken(user.id);
+    const refreshToken = await this.authRepository.setRefreshToken(user.id);
 
     return { accessToken, refreshToken };
   }
