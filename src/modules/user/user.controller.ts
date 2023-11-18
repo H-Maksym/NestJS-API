@@ -18,8 +18,7 @@ import {
 import { PrismaClientExceptionFilter } from '@/database/prisma/prisma-client-exception/prisma-client-exception.filter';
 
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 // import { UserEntity } from './entity/user.entity';
 
 @ApiTags('🙎‍♂️ service')

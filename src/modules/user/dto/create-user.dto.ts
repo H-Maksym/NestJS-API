@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { E_UserRole } from '@prisma/client';
+// import { E_UserRole } from '@prisma/client';
 import {
   MinLength,
   IsEmail,
   MaxLength,
-  IsEnum,
-  IsPhoneNumber,
+  // IsEnum,
+  // IsPhoneNumber,
   IsNotEmpty,
 } from 'class-validator';
 
@@ -28,14 +28,14 @@ export class CreateUserDto {
   @ApiProperty({ example: 'Maksym' })
   name?: string;
 
-  @IsPhoneNumber()
-  @ApiProperty({ example: '+380777777777' })
-  phone?: string;
+  // @IsPhoneNumber()
+  // @ApiProperty({ example: '+380777777777' })
+  // phone?: string;
 
-  @IsEnum(E_UserRole)
-  @ApiProperty({
-    enum: E_UserRole,
-    example: E_UserRole.USER,
-  })
-  role?: E_UserRole;
+  // @IsEnum(E_UserRole)
+  // @ApiProperty({
+  //   enum: E_UserRole,
+  //   example: E_UserRole.USER,
+  // })
+  // role?: E_UserRole;
 }

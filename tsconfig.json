@@ -20,10 +20,19 @@
 
     "typeRoots": ["node_modules/@types"],
     "paths": {
+      "@": ["./src"],
       "@/*": ["./src/*"],
-      "@config/*": ["./src/config/*"],
-      "@modules/*": ["./src/modules/*"],
+
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"],
+
+      "@modules": ["src/modules"],
+      "@modules/*": ["src/modules/*"],
+
+      "@common": ["src/common"],
       "@common/*": ["src/common/*"],
+
+      "@database": ["./src/database"],
       "@database/*": ["./src/database/*"]
     }
   }
