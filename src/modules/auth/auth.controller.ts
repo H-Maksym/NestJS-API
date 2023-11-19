@@ -14,9 +14,9 @@ import { SignInDto, SignUpDto } from './dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { CookieService } from '../cookie/cookie.service';
-import { Cookie } from '@common/decorators';
+import { Cookie, UserAgent } from '@common/decorators';
 import { REFRESH_TOKEN } from '@common/constants';
-import { Tokens } from './interfaces';
+import { ITokens } from './interfaces';
 
 @ApiTags('⛔ auth service')
 @Controller('auth')
@@ -39,8 +39,12 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
-    const tokens = await this.authService.signIn(signInDto);
+  async signIn(
+    @Body() signInDto: SignInDto,
+    @UserAgent() userAgent: string,
+    @Res() res: Response
+  ) {
+    const tokens = await this.authService.signIn(signInDto, userAgent);
     if (!tokens) {
       throw new BadRequestException(
         `Unable to sign in with data ${JSON.stringify(signInDto)}`
@@ -71,13 +75,18 @@ export class AuthController {
   @Get('refresh')
   async refreshToken(
     @Cookie(REFRESH_TOKEN) refreshToken: string,
-    @Res() res: Response
+    @Res() res: Response,
+    @UserAgent() userAgent: string
   ) {
-    if (!refreshToken) {
+    //COMMENT if token exists or delete from cookies independently
+    if (!refreshToken || typeof refreshToken !== 'string') {
       throw new UnauthorizedException();
     }
 
-    const tokens: Tokens = await this.authService.refreshToken(refreshToken);
+    const tokens: ITokens = await this.authService.refreshToken(
+      refreshToken,
+      userAgent
+    );
 
     if (!tokens) {
       throw new UnauthorizedException();

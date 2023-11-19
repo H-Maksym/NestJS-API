@@ -1,28 +1,28 @@
 import {
   ConflictException,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignInDto, SignUpDto } from './dto';
 import { UserService } from '@modules/user/user.service';
-import { Tokens } from './interfaces';
 import { compareSync } from 'bcrypt';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './repository/auth.repository';
+import { ITokens } from './interfaces';
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
-
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly authRepository: AuthRepository
   ) {}
 
-  private async generateTokens(user: User): Promise<Tokens> {
+  private async generateTokens(
+    user: User,
+    userAgent: string
+  ): Promise<ITokens> {
     const accessToken =
       'Bearer ' +
       this.jwtService.sign({
@@ -31,39 +31,34 @@ export class AuthService {
         roles: user.roles,
       });
 
-    const refreshToken = await this.authRepository.setRefreshToken(user.id);
+    const refreshToken = await this.authRepository.setRefreshToken(
+      user.id,
+      userAgent
+    );
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
 
     return { accessToken, refreshToken };
   }
 
   //COMMENT sign up by email, password, repeat password
   async signUp(signUpDto: SignUpDto) {
-    const user: User | null = await this.userService
-      .findOneByEmail(signUpDto.email)
-      .catch(err => {
-        //TODO Add Logger
-        this.logger.error(err);
-        return null;
-      });
+    const user: User | null = await this.userService.findOneByEmail(
+      signUpDto.email
+    );
+
     if (user) {
       throw new ConflictException('User with this email is already registered');
     }
-    return this.userService.create(signUpDto).catch(err => {
-      //TODO Add Logger
-      this.logger.error(err);
-      return null;
-    });
+    return this.userService.create(signUpDto);
   }
 
   //COMMENT sign in by email, password
-  async signIn(signInDto: SignInDto): Promise<Tokens> {
-    const user: User | null = await this.userService
-      .findOneByEmail(signInDto.email)
-      .catch(err => {
-        //TODO Add Logger
-        this.logger.error(err);
-        return null;
-      });
+  async signIn(signInDto: SignInDto, userAgent: string): Promise<ITokens> {
+    const user: User | null = await this.userService.findOneByEmail(
+      signInDto.email
+    );
 
     if (!user) {
       throw new UnauthorizedException('Email or password are invalid');
@@ -72,19 +67,26 @@ export class AuthService {
     if (user.password && !compareSync(signInDto.password, user.password)) {
       throw new UnauthorizedException();
     }
-    const tokens: Tokens = await this.generateTokens(user);
+    const tokens: ITokens = await this.generateTokens(user, userAgent);
 
     return tokens;
   }
 
-  async refreshToken(refreshToken: string): Promise<Tokens> {
+  async refreshToken(
+    refreshToken: string,
+    userAgent: string
+  ): Promise<ITokens> {
     //COMMENTS we delete token, if token does not return - token is absent in db
-
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
 
     const token = await this.authRepository.deleteRefreshToken(refreshToken);
+
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+
     if (new Date(token.expires) < new Date()) {
       throw new UnauthorizedException();
     }
@@ -95,6 +97,6 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    return await this.generateTokens(user);
+    return await this.generateTokens(user, userAgent);
   }
 }

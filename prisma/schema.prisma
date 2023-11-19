@@ -34,11 +34,11 @@ model User {
 }
 
 model Token {
-  token   String   @unique
-  expires DateTime
-  // userAgent String   @map("user_agent")
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String   @map("user_id")
+  token     String   @unique
+  expires   DateTime
+  userAgent String   @map("user_agent")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
 
   @@map("tokens")
 }

@@ -7,8 +7,10 @@ export const Cookie = createParamDecorator(
       return null;
     }
     const request = ctx.switchToHttp().getRequest();
-    return keyCookie && keyCookie in request.cookies
-      ? request.cookies[keyCookie]
-      : request.cookies;
+    const cookie =
+      keyCookie && keyCookie in request.cookies
+        ? request.cookies[keyCookie]
+        : request.cookies;
+    return cookie;
   }
 );
