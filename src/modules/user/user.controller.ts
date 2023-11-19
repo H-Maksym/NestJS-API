@@ -8,6 +8,8 @@ import {
   Delete,
   UseFilters,
   ParseUUIDPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,6 +22,8 @@ import { PrismaClientExceptionFilter } from '@database/prisma/prisma-client-exce
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
+import { UserResponse } from './responses';
+import { User } from '@prisma/client';
 // import { UserEntity } from './entity/user.entity';
 
 @ApiTags('🙎‍♂️ user servise')
@@ -30,33 +34,48 @@ import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   @ApiOperation({ summary: '🎭 create user' })
   // @ApiCreatedResponse({ type: UserEntity })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const user = await this.userService.create(createUserDto);
+    const responseUser = user ? new UserResponse(user) : null;
+    return responseUser;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(): Promise<User[] | []> {
+    const user = await this.userService.findAll();
+    const responseUsers = user?.map(user => new UserResponse(user)) || [];
+    return responseUsers;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.findOneById(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const user = await this.userService.findOneById(id);
+    const responseUser = user ? new UserResponse(user) : null;
+    return responseUser;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto
   ) {
-    return this.userService.update(id, updateUserDto);
+    const user = await this.userService.update(id, updateUserDto);
+    const responseUser = user ? new UserResponse(user) : null;
+    return responseUser;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const user = await this.userService.remove(id);
+    const responseUser = user ? new UserResponse(user) : null;
+    return responseUser;
   }
 }

@@ -1,12 +1,14 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpStatus,
   Post,
   Res,
   UnauthorizedException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { Response } from 'express';
@@ -19,6 +21,7 @@ import { Cookie, SkipAuth, UserAgent } from '@common/decorators';
 
 import { SignInDto, SignUpDto } from './dto';
 import { ITokens } from './interfaces';
+import { UserResponse } from '../user/responses/user.response';
 
 @ApiTags('⛔ auth service')
 @SkipAuth()
@@ -29,6 +32,7 @@ export class AuthController {
     private readonly cookiesService: CookieService
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('sign-up')
   @ApiOperation({ summary: '🎭 sign-up' })
   async signUp(@Body() signUpDto: SignUpDto): Promise<User> {
@@ -38,7 +42,7 @@ export class AuthController {
         `Unable to sign up with data ${JSON.stringify(signUpDto)}`
       );
     }
-    return user;
+    return new UserResponse(user);
   }
 
   @Post('sign-in')

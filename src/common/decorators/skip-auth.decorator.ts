@@ -1,15 +1,15 @@
 import { ExecutionContext, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-export const IS_PUBLIC_KEY = 'isPublic';
-export const SkipAuth = () => SetMetadata(IS_PUBLIC_KEY, true);
-export const isPublic = (
+export const IS_SKIP_AUTH_KEY = 'isSkipAuth';
+export const SkipAuth = () => SetMetadata(IS_SKIP_AUTH_KEY, true);
+export const isSkipAuth = (
   ctx: ExecutionContext,
   reflector: Reflector
 ): boolean => {
-  const isPublic = reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+  const isSkipAuth = reflector.getAllAndOverride<boolean>(IS_SKIP_AUTH_KEY, [
     ctx.getHandler,
     ctx.getClass(),
   ]);
-  return isPublic;
+  return isSkipAuth;
 };
