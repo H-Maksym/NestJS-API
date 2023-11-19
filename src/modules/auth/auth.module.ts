@@ -13,10 +13,11 @@ import { jwtModuleAsyncOptions } from '@config';
 import { AuthRepository } from './repository/auth.repository';
 import { CookieModule } from '@modules/cookie/cookie.module';
 import { STRATEGIES } from './strategies';
+import { GUARDS } from './guards';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, AuthRepository, ...STRATEGIES],
+  providers: [AuthService, AuthRepository, ...STRATEGIES, ...GUARDS],
   imports: [
     ConfigModule,
     DatabaseModule,
