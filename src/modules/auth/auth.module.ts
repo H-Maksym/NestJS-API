@@ -12,10 +12,11 @@ import { DatabaseModule } from '@database/database.module';
 import { jwtModuleAsyncOptions } from '@config';
 import { AuthRepository } from './repository/auth.repository';
 import { CookieModule } from '@modules/cookie/cookie.module';
+import { STRATEGIES } from './strategies';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, AuthRepository],
+  providers: [AuthService, AuthRepository, ...STRATEGIES],
   imports: [
     ConfigModule,
     DatabaseModule,
