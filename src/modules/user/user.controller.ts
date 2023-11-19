@@ -24,6 +24,8 @@ import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { UserResponse } from './responses';
 import { User } from '@prisma/client';
+import { CurrentUser } from '@common/decorators';
+import { IJwtPayload } from '@modules/auth/interfaces';
 // import { UserEntity } from './entity/user.entity';
 
 @ApiTags('🙎‍♂️ user servise')
@@ -73,8 +75,9 @@ export class UserController {
 
   @Delete(':id')
   remove(
-    @Param('id', ParseUUIDPipe) id: string
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: IJwtPayload
   ): Promise<{ id: string } | null> {
-    return this.userService.remove(id);
+    return this.userService.remove(id, user);
   }
 }

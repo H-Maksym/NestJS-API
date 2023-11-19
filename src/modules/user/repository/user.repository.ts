@@ -3,6 +3,7 @@ import { PrismaService } from '@database/prisma/prisma.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { User } from '@prisma/client';
 import { PasswordService } from '../../password/password.service';
+import { IJwtPayload } from '@modules/auth/interfaces';
 
 @Injectable()
 export class UserRepository {
