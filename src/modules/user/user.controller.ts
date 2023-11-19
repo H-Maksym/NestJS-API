@@ -38,7 +38,7 @@ export class UserController {
   @Post()
   @ApiOperation({ summary: '🎭 create user' })
   // @ApiCreatedResponse({ type: UserEntity })
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User | null> {
     const user = await this.userService.create(createUserDto);
     const responseUser = user ? new UserResponse(user) : null;
     return responseUser;
@@ -54,7 +54,7 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User | null> {
     const user = await this.userService.findOneById(id);
     const responseUser = user ? new UserResponse(user) : null;
     return responseUser;
@@ -65,17 +65,16 @@ export class UserController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto
-  ) {
+  ): Promise<User | null> {
     const user = await this.userService.update(id, updateUserDto);
     const responseUser = user ? new UserResponse(user) : null;
     return responseUser;
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    const user = await this.userService.remove(id);
-    const responseUser = user ? new UserResponse(user) : null;
-    return responseUser;
+  remove(
+    @Param('id', ParseUUIDPipe) id: string
+  ): Promise<{ id: string } | null> {
+    return this.userService.remove(id);
   }
 }

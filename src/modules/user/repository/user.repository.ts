@@ -72,11 +72,13 @@ export class UserRepository {
   }
 
   //COMMENT delete user by id
-  async deleteUser(id: string): Promise<User | null> {
-    return await this.db.user.delete({ where: { id } }).catch(err => {
-      //TODO Add Logger
-      this.logger.error(err);
-      return null;
-    });
+  async deleteUser(id: string): Promise<{ id: string } | null> {
+    return await this.db.user
+      .delete({ where: { id }, select: { id: true } })
+      .catch(err => {
+        //TODO Add Logger
+        this.logger.error(err);
+        return null;
+      });
   }
 }
