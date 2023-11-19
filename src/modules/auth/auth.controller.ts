@@ -8,17 +8,20 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Response } from 'express';
-import { AuthService } from './auth.service';
-import { SignInDto, SignUpDto } from './dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { CookieService } from '../cookie/cookie.service';
-import { Cookie, UserAgent } from '@common/decorators';
+import { Response } from 'express';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
 import { REFRESH_TOKEN } from '@common/constants';
+import { AuthService } from './auth.service';
+import { CookieService } from '../cookie/cookie.service';
+import { Cookie, SkipAuth, UserAgent } from '@common/decorators';
+
+import { SignInDto, SignUpDto } from './dto';
 import { ITokens } from './interfaces';
 
 @ApiTags('⛔ auth service')
+@SkipAuth()
 @Controller('auth')
 export class AuthController {
   constructor(
