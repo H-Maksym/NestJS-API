@@ -20,6 +20,10 @@ export class AuthRepository {
     userId: string,
     userAgent: string
   ): Promise<Token | null> {
+    // if (typeof userId !== 'string' || typeof userAgent !== 'string') {
+    //   return null;
+    // }
+
     const _token = await this.db.token.findFirst({
       where: { userId, userAgent },
     });
@@ -54,6 +58,9 @@ export class AuthRepository {
   }
 
   async getRefreshToken(refreshToken: string): Promise<Token | null> {
+    if (typeof refreshToken !== 'string') {
+      return null;
+    }
     return await this.db.token
       .findUnique({ where: { token: refreshToken } })
       .catch(err => {
@@ -64,6 +71,9 @@ export class AuthRepository {
   }
 
   async deleteRefreshToken(refreshToken: string): Promise<Token | null> {
+    if (typeof refreshToken !== 'string') {
+      return null;
+    }
     return await this.db.token
       .delete({
         where: { token: refreshToken },

@@ -82,7 +82,7 @@ export class AuthController {
     @UserAgent() userAgent: string
   ) {
     //COMMENT if token exists or delete from cookies independently
-    if (!refreshToken || typeof refreshToken !== 'string') {
+    if (!refreshToken) {
       throw new UnauthorizedException();
     }
 

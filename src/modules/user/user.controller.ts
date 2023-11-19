@@ -10,6 +10,7 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   // ApiCreatedResponse,
   ApiOperation,
   ApiTags,
@@ -22,6 +23,7 @@ import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 // import { UserEntity } from './entity/user.entity';
 
 @ApiTags('🙎‍♂️ user servise')
+@ApiBearerAuth()
 @Controller('user')
 //decorator for prisma client error handler
 @UseFilters(PrismaClientExceptionFilter)
