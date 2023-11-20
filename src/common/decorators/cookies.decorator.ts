@@ -10,6 +10,8 @@ export const Cookie = createParamDecorator(
     const cookie =
       keyCookie && keyCookie in request.cookies
         ? request.cookies[keyCookie]
+        : keyCookie
+        ? null
         : request.cookies;
     return cookie;
   }

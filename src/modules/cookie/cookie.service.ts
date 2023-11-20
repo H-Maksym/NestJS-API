@@ -1,4 +1,4 @@
-import { NODE_ENV, REFRESH_TOKEN } from '@common/constants';
+import { NODE_ENV } from '@common/constants';
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -24,8 +24,12 @@ export class CookieService {
     });
   }
 
-  async removeRefreshTokenToCookies(res: Response) {
-    res.clearCookie(REFRESH_TOKEN);
+  async removeFromCookies(key: string, res: Response) {
+    res.cookie(key, '', {
+      httpOnly: true,
+      secure: this.configService.get(NODE_ENV, 'development') === 'production',
+      expires: new Date(),
+    });
   }
 
   getCookies(/* res: Response */): string {

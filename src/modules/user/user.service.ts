@@ -23,7 +23,6 @@ export class UserService {
     return this.userRepository.updateUser(id, updateUserDto);
   }
   remove(id: string, user: IJwtPayload) {
-    console.log('🚀 ~ UserService ~ remove ~ user:', user);
     //COMMENT delete only own user and with status user role ADMIN
     const isAdmin = user.roles
       ? user.roles.includes($Enums.E_UserRole.ADMIN)

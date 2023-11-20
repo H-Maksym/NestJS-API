@@ -17,10 +17,10 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { REFRESH_TOKEN } from '@common/constants';
 import { AuthService } from './auth.service';
 import { CookieService } from '../cookie/cookie.service';
-import { Cookie, SkipAuth, UserAgent } from '@common/decorators';
+import { Cookie, CurrentUser, SkipAuth, UserAgent } from '@common/decorators';
 
 import { SignInDto, SignUpDto } from './dto';
-import { ITokens } from './interfaces';
+import { IJwtPayload, ITokens } from './interfaces';
 import { UserResponse } from '../user/responses/user.response';
 
 @ApiTags('⛔ auth service')
@@ -74,9 +74,39 @@ export class AuthController {
     });
   }
 
-  @Post('sign-out')
-  signOut() {
-    return null;
+  @Get('sign-out')
+  async signOut(
+    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Res() res: Response
+  ) {
+    if (!refreshToken) {
+      res.sendStatus(HttpStatus.OK);
+      return;
+    }
+    //COMMENT if user sign-out early
+    const isExistToken = await this.authService.findToken(refreshToken);
+    if (!isExistToken) {
+      res.sendStatus(HttpStatus.OK);
+      return;
+    }
+
+    await this.authService.deleteToken(refreshToken);
+    await this.cookiesService.removeFromCookies(refreshToken, res);
+    res.sendStatus(HttpStatus.OK);
+  }
+
+  @Get('sign-out/all')
+  async signOutAllUserAgent(
+    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @CurrentUser() user: IJwtPayload,
+    @Res() res: Response
+  ) {
+    if (!refreshToken) {
+      res.sendStatus(HttpStatus.OK);
+    }
+    await this.authService.deleteAllTokens(user);
+    this.cookiesService.removeFromCookies(refreshToken, res);
+    res.sendStatus(HttpStatus.OK);
   }
 
   @Get('refresh')

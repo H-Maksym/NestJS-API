@@ -6,10 +6,10 @@ import {
 import { SignInDto, SignUpDto } from './dto';
 import { UserService } from '@modules/user/user.service';
 import { compareSync } from 'bcrypt';
-import { User } from '@prisma/client';
+import { Token, User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './repository/auth.repository';
-import { ITokens } from './interfaces';
+import { IJwtPayload, ITokens } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -72,6 +72,12 @@ export class AuthService {
     return tokens;
   }
 
+  //COMMENT sign in by email, password
+  async signOut(refreshToken: string): Promise<Token | null> {
+    return await this.authRepository.deleteRefreshToken(refreshToken);
+  }
+
+  //COMMENT get refresh token
   async refreshToken(
     refreshToken: string,
     userAgent: string
@@ -98,5 +104,16 @@ export class AuthService {
     }
 
     return await this.generateTokens(user, userAgent);
+  }
+
+  async findToken(refreshToken: string): Promise<Token | null | void> {
+    await this.authRepository.findRefreshToken(refreshToken);
+  }
+  async deleteToken(refreshToken: string) {
+    await this.authRepository.deleteRefreshToken(refreshToken);
+  }
+
+  async deleteAllTokens(user: IJwtPayload) {
+    await this.authRepository.deleteAllRefreshTokens(user);
   }
 }

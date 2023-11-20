@@ -5,6 +5,7 @@ import { PrismaService } from '@database/prisma/prisma.service';
 import { Token } from '@prisma/client';
 import { convertToSecondsUtil } from '@common/utils';
 import { JWT_REFRESH_TOKEN_EXP } from '@common/constants';
+import { IJwtPayload } from '../interfaces';
 
 @Injectable()
 export class AuthRepository {
@@ -70,13 +71,34 @@ export class AuthRepository {
       });
   }
 
+  async findRefreshToken(refreshToken: string): Promise<Token | null | void> {
+    return await this.db.token
+      .findFirst({
+        where: { token: refreshToken },
+      })
+      .catch(err => {
+        //TODO Add Logger
+        this.logger.error(err);
+        return null;
+      });
+  }
+
   async deleteRefreshToken(refreshToken: string): Promise<Token | null> {
-    if (typeof refreshToken !== 'string') {
-      return null;
-    }
     return await this.db.token
       .delete({
         where: { token: refreshToken },
+      })
+      .catch(err => {
+        //TODO Add Logger
+        this.logger.error(err);
+        return null;
+      });
+  }
+
+  async deleteAllRefreshTokens(user: IJwtPayload): Promise<{ count } | null> {
+    return await this.db.token
+      .deleteMany({
+        where: { userId: user?.id },
       })
       .catch(err => {
         //TODO Add Logger
