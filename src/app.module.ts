@@ -2,7 +2,8 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from '@common/middlewares';
 
-import { ServerModule } from './modules/server/server.module';
+import { ServerModule } from '@modules/server/server.module';
+import {CookieModule} from '@modules/cookie/cookie.module'
 import { DatabaseModule } from '@database/database.module';
 import { UserModule } from '@modules/user/user.module';
 import { AuthModule } from '@modules/auth/auth.module';
@@ -13,6 +14,7 @@ import { APP_GUARD } from '@nestjs/core';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ServerModule,
+    CookieModule,
     DatabaseModule,
     UserModule,
     AuthModule,

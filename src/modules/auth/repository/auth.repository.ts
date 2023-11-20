@@ -71,16 +71,10 @@ export class AuthRepository {
       });
   }
 
-  async findRefreshToken(refreshToken: string): Promise<Token | null | void> {
-    return await this.db.token
-      .findFirst({
-        where: { token: refreshToken },
-      })
-      .catch(err => {
-        //TODO Add Logger
-        this.logger.error(err);
-        return null;
-      });
+  async findRefreshToken(refreshToken: string): Promise<Token | null> {
+    return await this.db.token.findFirst({
+      where: { token: refreshToken },
+    });
   }
 
   async deleteRefreshToken(refreshToken: string): Promise<Token | null> {

@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { UserRepository } from './repository/user.repository';
 import { IJwtPayload } from '@modules/auth/interfaces';
-import { E_UserRole, $Enums } from '@prisma/client';
+import { E_UserRole } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
   remove(id: string, user: IJwtPayload) {
     //COMMENT delete only own user and with status user role ADMIN
     const isAdmin = user.roles
-      ? user.roles.includes($Enums.E_UserRole.ADMIN)
+      ? user.roles.includes(E_UserRole.ADMIN)
       : false;
     if (id !== user.id && !isAdmin) {
       throw new ForbiddenException();

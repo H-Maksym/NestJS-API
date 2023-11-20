@@ -91,7 +91,7 @@ export class AuthController {
     }
 
     await this.authService.deleteToken(refreshToken);
-    await this.cookiesService.removeFromCookies(refreshToken, res);
+    await this.cookiesService.removeFromCookies(REFRESH_TOKEN, res);
     res.sendStatus(HttpStatus.OK);
   }
 

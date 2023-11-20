@@ -106,14 +106,14 @@ export class AuthService {
     return await this.generateTokens(user, userAgent);
   }
 
-  async findToken(refreshToken: string): Promise<Token | null | void> {
-    await this.authRepository.findRefreshToken(refreshToken);
+  async findToken(refreshToken: string): Promise<Token | null> {
+    return await this.authRepository.findRefreshToken(refreshToken);
   }
   async deleteToken(refreshToken: string) {
-    await this.authRepository.deleteRefreshToken(refreshToken);
+    return await this.authRepository.deleteRefreshToken(refreshToken);
   }
 
   async deleteAllTokens(user: IJwtPayload) {
-    await this.authRepository.deleteAllRefreshTokens(user);
+    return await this.authRepository.deleteAllRefreshTokens(user);
   }
 }
