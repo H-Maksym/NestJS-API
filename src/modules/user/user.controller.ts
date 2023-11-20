@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -24,10 +25,11 @@ import { PrismaClientExceptionFilter } from '@database/prisma/prisma-client-exce
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { UserResponse } from './responses';
-import { User } from '@prisma/client';
-import { Cookie, CurrentUser, UUIDParam } from '@common/decorators';
+import { E_UserRole, User } from '@prisma/client';
+import { Cookie, CurrentUser, Roles, UUIDParam } from '@common/decorators';
 import { IJwtPayload } from '@modules/auth/interfaces';
 import { REFRESH_TOKEN } from '@common/constants';
+import { RolesGuard } from '@modules/auth/guards/role.guard';
 
 @ApiTags('🙎‍♂️ user service')
 @ApiBearerAuth()
@@ -60,6 +62,17 @@ export class UserController {
     return responseUsers;
   }
 
+  //COMMENT endpoint only for admin
+  @UseGuards(RolesGuard)
+  @Roles(E_UserRole.ADMIN)
+  @Get('me')
+  async getMe(@CurrentUser('id') user: IJwtPayload) {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return await this.userService.findOneById(user.id);
+  }
+
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User | null> {
@@ -86,15 +99,16 @@ export class UserController {
   ): Promise<{ id: string } | null> {
     return this.userService.remove(id, user);
   }
-
-  //COMMENT endpoint only for admin
-  // @UseGuards(RolesGuard)
-  // @Roles(E_UserRole.ADMIN)
-  @Get('me')
-  async getMe(@CurrentUser('id') user: IJwtPayload) {
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    return await this.userService.findOneById(user.id);
-  }
 }
+
+// @Controller('user')
+// export class user {
+//   @Get()
+//   async getAll() {}
+
+//   @Get(':id')
+//   async getById() {}
+
+//   @Get('me')
+//   async getMe() {}
+// }
