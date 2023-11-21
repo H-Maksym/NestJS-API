@@ -8,7 +8,7 @@ export class CookieController {
 
   @SkipAuth()
   @Get()
-  getCookies(@Res() res: Response) {
+  getCookies(@Res({ passthrough: true }) res: Response) {
     return this.cookieService.getCookies('111', res);
   }
 }

@@ -51,7 +51,7 @@ export class AuthController {
   async signIn(
     @Body() signInDto: SignInDto,
     @UserAgent() userAgent: string,
-    @Res() res: Response
+    @Res({ passthrough: true }) res: Response
   ) {
     const tokens = await this.authService.signIn(signInDto, userAgent);
     if (!tokens) {
@@ -79,7 +79,7 @@ export class AuthController {
   @Get('sign-out')
   async signOut(
     @Cookie(REFRESH_TOKEN) refreshToken: string,
-    @Res() res: Response
+    @Res({ passthrough: true }) res: Response
   ) {
     if (!refreshToken) {
       res.sendStatus(HttpStatus.OK);
@@ -103,7 +103,7 @@ export class AuthController {
   async signOutAllUserAgent(
     @Cookie(REFRESH_TOKEN) refreshToken: string,
     @CurrentUser() user: IJwtPayload,
-    @Res() res: Response
+    @Res({ passthrough: true }) res: Response
   ) {
     if (!refreshToken) {
       res.sendStatus(HttpStatus.OK);
@@ -116,7 +116,7 @@ export class AuthController {
   @Get('refresh')
   async refreshToken(
     @Cookie(REFRESH_TOKEN) refreshToken: string,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @UserAgent() userAgent: string
   ) {
     //COMMENT if token exists or delete from cookies independently
