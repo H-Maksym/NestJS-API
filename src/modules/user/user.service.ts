@@ -7,8 +7,11 @@ import { E_UserRole } from '@prisma/client';
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
-  create(createUserDto: CreateUserDto) {
-    return this.userRepository.createUser(createUserDto);
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.userRepository.createUser(createUserDto);
+    console.log('🚀 ~ UserService ~ create ~ user:', user);
+
+    return user;
   }
   findAll() {
     return this.userRepository.getUsers();
@@ -24,9 +27,7 @@ export class UserService {
   }
   remove(id: string, user: IJwtPayload) {
     //COMMENT delete only own user and with status user role ADMIN
-    const isAdmin = user.roles
-      ? user.roles.includes(E_UserRole.ADMIN)
-      : false;
+    const isAdmin = user.roles ? user.roles.includes(E_UserRole.ADMIN) : false;
     if (id !== user.id && !isAdmin) {
       throw new ForbiddenException();
     }

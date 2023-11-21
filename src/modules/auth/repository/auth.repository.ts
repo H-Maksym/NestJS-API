@@ -21,10 +21,6 @@ export class AuthRepository {
     userId: string,
     userAgent: string
   ): Promise<Token | null> {
-    // if (typeof userId !== 'string' || typeof userAgent !== 'string') {
-    //   return null;
-    // }
-
     const _token = await this.db.token.findFirst({
       where: { userId, userAgent },
     });
@@ -74,6 +70,12 @@ export class AuthRepository {
   async findRefreshToken(refreshToken: string): Promise<Token | null> {
     return await this.db.token.findFirst({
       where: { token: refreshToken },
+    });
+  }
+
+  async findUserToken(refreshToken: string): Promise<Token | null> {
+    return await this.db.token.findFirst({
+      where: { userId: refreshToken },
     });
   }
 

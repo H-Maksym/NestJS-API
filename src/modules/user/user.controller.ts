@@ -26,9 +26,8 @@ import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { UserResponse } from './responses';
 import { E_UserRole, User } from '@prisma/client';
-import { Cookie, CurrentUser, Roles, UUIDParam } from '@common/decorators';
+import { CurrentUser, Roles, UUIDParam } from '@common/decorators';
 import { IJwtPayload } from '@modules/auth/interfaces';
-import { REFRESH_TOKEN } from '@common/constants';
 import { RolesGuard } from '@modules/auth/guards/role.guard';
 
 @ApiTags('🙎‍♂️ user service')
@@ -51,12 +50,7 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async findAll(
-    @Cookie(REFRESH_TOKEN) refreshToken: string
-  ): Promise<User[] | []> {
-    if (!refreshToken) {
-      throw new UnauthorizedException();
-    }
+  async findAll(): Promise<User[] | []> {
     const user = await this.userService.findAll();
     const responseUsers = user?.map(user => new UserResponse(user)) || [];
     return responseUsers;

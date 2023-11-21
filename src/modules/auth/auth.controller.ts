@@ -4,6 +4,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  HttpCode,
   HttpStatus,
   Post,
   Res,
@@ -32,6 +33,7 @@ export class AuthController {
     private readonly cookiesService: CookieService
   ) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('sign-up')
   @ApiOperation({ summary: '🎭 sign-up' })
@@ -83,6 +85,7 @@ export class AuthController {
       res.sendStatus(HttpStatus.OK);
       return;
     }
+
     //COMMENT if user sign-out early
     const isExistToken = await this.authService.findToken(refreshToken);
     if (!isExistToken) {
@@ -91,6 +94,7 @@ export class AuthController {
     }
 
     await this.authService.deleteToken(refreshToken);
+
     await this.cookiesService.removeFromCookies(REFRESH_TOKEN, res);
     res.sendStatus(HttpStatus.OK);
   }

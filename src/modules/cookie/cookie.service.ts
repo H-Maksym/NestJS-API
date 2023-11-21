@@ -1,4 +1,4 @@
-import { NODE_ENV, REFRESH_TOKEN } from '@common/constants';
+import { NODE_ENV } from '@common/constants';
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 

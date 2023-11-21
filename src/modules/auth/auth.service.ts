@@ -35,6 +35,7 @@ export class AuthService {
       user.id,
       userAgent
     );
+
     if (!refreshToken) {
       throw new UnauthorizedException();
     }
@@ -109,6 +110,11 @@ export class AuthService {
   async findToken(refreshToken: string): Promise<Token | null> {
     return await this.authRepository.findRefreshToken(refreshToken);
   }
+
+  async findUserToken(refreshToken: string): Promise<Token | null> {
+    return await this.authRepository.findUserToken(refreshToken);
+  }
+
   async deleteToken(refreshToken: string) {
     return await this.authRepository.deleteRefreshToken(refreshToken);
   }
