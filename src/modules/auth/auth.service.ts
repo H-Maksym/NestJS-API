@@ -111,8 +111,14 @@ export class AuthService {
     return await this.authRepository.findRefreshToken(refreshToken);
   }
 
-  async findUserToken(refreshToken: string): Promise<Token | null> {
-    return await this.authRepository.findUserToken(refreshToken);
+  async findSessionByUserIdAndUserAgent(
+    userId: string,
+    userAgent: string
+  ): Promise<Token | null> {
+    return await this.authRepository.findSessionByUserIdAndUserAgent(
+      userId,
+      userAgent
+    );
   }
 
   async deleteToken(refreshToken: string) {

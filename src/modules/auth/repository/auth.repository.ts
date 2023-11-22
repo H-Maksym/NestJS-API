@@ -73,9 +73,12 @@ export class AuthRepository {
     });
   }
 
-  async findUserToken(refreshToken: string): Promise<Token | null> {
+  async findSessionByUserIdAndUserAgent(
+    userId: string,
+    userAgent: string
+  ): Promise<Token | null> {
     return await this.db.token.findFirst({
-      where: { userId: refreshToken },
+      where: { userId, userAgent },
     });
   }
 
