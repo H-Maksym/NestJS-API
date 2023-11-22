@@ -7,10 +7,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { LiveServerDTO } from './dto/live-server.dto';
+import { SkipAuth } from '@common/decorators';
 
 // @ApiTags('💂‍♂️ users')
 @ApiTags('🧶 server service')
 @ApiBearerAuth()
+@SkipAuth()
 @Controller('server')
 export class ServerController {
   constructor(private readonly serverService: ServerService) {}

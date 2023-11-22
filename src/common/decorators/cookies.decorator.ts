@@ -7,6 +7,8 @@ export const Cookie = createParamDecorator(
       return null;
     }
     const request = ctx.switchToHttp().getRequest();
+
+    console.log('🚀 ~ cookie:');
     const cookie =
       keyCookie && keyCookie in request.cookies
         ? request.cookies[keyCookie]

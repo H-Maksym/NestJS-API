@@ -26,5 +26,6 @@ import { GUARDS } from './guards';
     JwtModule.registerAsync(jwtModuleAsyncOptions()),
     UserModule,
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -41,6 +41,7 @@ export class AuthenticateMiddleware implements NestMiddleware {
         }
 
         await this.authService.deleteToken(existingToken.token);
+
         return res.status(HttpStatus.UNAUTHORIZED).json({
           message: 'Unauthorized',
           statusCode: 401,
