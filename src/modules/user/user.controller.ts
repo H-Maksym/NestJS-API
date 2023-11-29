@@ -28,6 +28,7 @@ import { E_UserRole, User } from '@prisma/client';
 import { CurrentUser, Roles, UUIDParam } from '@common/decorators';
 import { IJwtPayload } from '@modules/auth/interfaces';
 import { RolesGuard } from '@modules/auth/guards/role.guard';
+import { UUID } from 'crypto';
 
 @ApiTags('🙎‍♂️ user service')
 @ApiBearerAuth()
@@ -60,11 +61,13 @@ export class UserController {
   @UseGuards(RolesGuard)
   @Roles(E_UserRole.ADMIN)
   @Get('me')
-  async getMe(@CurrentUser('id') userJWT: IJwtPayload) {
-    if (!userJWT) {
+  async getMe(@CurrentUser('id') id: UUID) {
+    if (!id) {
       throw new UnauthorizedException();
     }
-    const user = await this.userService.findOneByIdOrEmail(userJWT.id);
+
+    const user = await this.userService.findOneByIdOrEmail(id, true);
+
     const responseUser = user ? new UserResponse(user) : null;
     return responseUser;
   }

@@ -35,8 +35,7 @@ export class UserService {
     const user = await this.cacheManager.get<User>(idOrEmail);
     console.log('cash');
     if (!user) {
-      console.log('no cash');
-      const user = this.userRepository.getUserByIdOrEmail(idOrEmail);
+      const user = await this.userRepository.getUserByIdOrEmail(idOrEmail);
       if (!user) {
         return null;
       }
