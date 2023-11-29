@@ -4,7 +4,7 @@ export function convertToSecondsUtil(timeStr: string) {
     return parseInt(timeStr);
   }
 
-  let multiplier;
+  let multiplier: number;
 
   switch (timeStr[timeStr.length - 1]) {
     case 's':

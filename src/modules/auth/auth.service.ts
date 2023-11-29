@@ -45,7 +45,7 @@ export class AuthService {
 
   //COMMENT sign up by email, password, repeat password
   async signUp(signUpDto: SignUpDto) {
-    const user: User | null = await this.userService.findOneByEmail(
+    const user: User | null = await this.userService.findOneByIdOrEmail(
       signUpDto.email
     );
 
@@ -57,8 +57,9 @@ export class AuthService {
 
   //COMMENT sign in by email, password
   async signIn(signInDto: SignInDto, userAgent: string): Promise<ITokens> {
-    const user: User | null = await this.userService.findOneByEmail(
-      signInDto.email
+    const user: User | null = await this.userService.findOneByIdOrEmail(
+      signInDto.email,
+      true
     );
 
     if (!user) {
@@ -98,7 +99,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userService.findOneById(token.userId);
+    const user = await this.userService.findOneByIdOrEmail(token.userId);
 
     if (!user) {
       throw new UnauthorizedException();

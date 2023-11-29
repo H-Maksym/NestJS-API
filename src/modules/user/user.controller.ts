@@ -6,7 +6,6 @@ import {
   Put,
   Param,
   Delete,
-  UseFilters,
   ParseUUIDPipe,
   UseInterceptors,
   ClassSerializerInterceptor,
@@ -20,7 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { PrismaClientExceptionFilter } from '@database/prisma/prisma-client-exception/prisma-client-exception.filter';
+// import { PrismaClientExceptionFilter } from '@database/prisma/prisma-client-exception/prisma-client-exception.filter';
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
@@ -34,7 +33,7 @@ import { RolesGuard } from '@modules/auth/guards/role.guard';
 @ApiBearerAuth()
 @Controller('user')
 //decorator for prisma client error handler
-@UseFilters(PrismaClientExceptionFilter)
+// @UseFilters(PrismaClientExceptionFilter)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -57,20 +56,23 @@ export class UserController {
   }
 
   //COMMENT endpoint only for admin
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(RolesGuard)
   @Roles(E_UserRole.ADMIN)
   @Get('me')
-  async getMe(@CurrentUser('id') user: IJwtPayload) {
-    if (!user) {
+  async getMe(@CurrentUser('id') userJWT: IJwtPayload) {
+    if (!userJWT) {
       throw new UnauthorizedException();
     }
-    return await this.userService.findOneById(user.id);
+    const user = await this.userService.findOneByIdOrEmail(userJWT.id);
+    const responseUser = user ? new UserResponse(user) : null;
+    return responseUser;
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User | null> {
-    const user = await this.userService.findOneById(id);
+    const user = await this.userService.findOneByIdOrEmail(id);
     const responseUser = user ? new UserResponse(user) : null;
     return responseUser;
   }

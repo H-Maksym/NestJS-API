@@ -3,7 +3,6 @@ import { PrismaService } from '@database/prisma/prisma.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { User } from '@prisma/client';
 import { PasswordService } from '../../password/password.service';
-import { IJwtPayload } from '@modules/auth/interfaces';
 
 @Injectable()
 export class UserRepository {
@@ -38,16 +37,17 @@ export class UserRepository {
   }
 
   //COMMENT get user by id
-  async getUserById(id: string): Promise<User | null> {
-    return await this.db.user
+  async getUserByIdOrEmail(idOrEmail: string): Promise<User | null> {
+    const user = await this.db.user
       .findFirst({
-        where: { id },
+        where: { OR: [{ id: idOrEmail }, { email: idOrEmail }] },
       })
       .catch(err => {
         //TODO Add Logger
         this.logger.error(err);
         return null;
       });
+    return user;
   }
 
   //COMMENT get user by email
