@@ -5,18 +5,6 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient {
   private prisma: PrismaClient = new PrismaClient();
 
-  // constructor(private readonly database: string) {
-  //   super();
-  //   this.prisma = new PrismaClient();
-
-  //   switch (database) {
-  //     case 'USER':
-  //       this.prisma.user;
-  //     default:
-  //       this.prisma.token;
-  //   }
-  // }
-
   async onOnModuleInit() {
     await this.$connect();
   }
@@ -30,13 +18,8 @@ export class PrismaService extends PrismaClient {
   //   this.$on('beforeExit', async () => await app.close);
   // }
 
-  // Custom method to get only the user model
-  getUserModel() {
-    return this.prisma.user;
-  }
-
-  // Custom method to get only the other model
-  // getUserRoleModel() {
-  //   return this.prisma.userRole;
+  //COMMENTS Custom method to get only the user model
+  // getUserModel() {
+  //   return this.prisma.user;
   // }
 }

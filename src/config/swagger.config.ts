@@ -11,6 +11,11 @@ export const swaggerConfig = new DocumentBuilder()
     scheme: 'bearer',
     bearerFormat: 'JWT',
   })
+  .setContact(
+    'Maksym Holovachuk',
+    'https://www.linkedin.com/in/maksym-holovachuk-a81888125/',
+    'mgolovachuk@gmail.com'
+  )
   // .addTag('api')
   .build();
 

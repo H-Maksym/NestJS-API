@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 // import { E_UserRole } from '@prisma/client';
 import {
   MinLength,
@@ -12,8 +12,12 @@ import {
 export class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
-  @ApiProperty({ required: false, example: 'mail@mail.com' })
-  email: string;
+  @ApiProperty({
+    type: String,
+    example: 'mail@mail.com',
+    description: 'user email',
+  })
+  readonly email: string;
 
   // @MinLength(6, {
   //   message:
@@ -22,11 +26,19 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(6)
   @MaxLength(15)
-  @ApiProperty({ required: false, example: 'password' })
-  password: string;
+  @ApiProperty({
+    type: String,
+    example: 'password',
+    description: 'user password',
+  })
+  readonly password: string;
 
-  @ApiProperty({ example: 'Maksym' })
-  name?: string;
+  @ApiPropertyOptional({
+    type: String,
+    example: 'Maksym',
+    description: 'user name',
+  })
+  readonly name?: string;
 
   // @IsPhoneNumber()
   // @ApiProperty({ example: '+380777777777' })

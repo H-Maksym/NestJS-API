@@ -8,15 +8,15 @@ import { setupSwagger } from 'src/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  //Validation pipe for income data
+  //COMMENTS Validation pipe for income data
   //whitelist: true - not adding any fields does not match DTO
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  //Custom Prisma client exception filter
+  //COMMENTS Custom Prisma client exception filter
   // const { httpAdapter } = app.get(HttpAdapterHost);
   // app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
-  // Starts listening for shutdown hooks
+  //COMMENTS Starts listening for shutdown hooks
   app.enableShutdownHooks();
 
   //COMMENT set cors request

@@ -4,7 +4,6 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
-  HttpCode,
   HttpStatus,
   Post,
   Res,
@@ -23,6 +22,11 @@ import { Cookie, CurrentUser, SkipAuth, UserAgent } from '@common/decorators';
 import { SignInDto, SignUpDto } from './dto';
 import { IJwtPayload, ITokens } from './interfaces';
 import { UserResponse } from '../user/responses/user.response';
+import {
+  ApiSignUpBadRequestResponse,
+  ApiSignUpConflictResponse,
+  ApiSignUpCreatedResponse,
+} from './responses/sign-up.decorator';
 
 @ApiTags('⛔ auth service')
 @SkipAuth()
@@ -33,10 +37,12 @@ export class AuthController {
     private readonly cookiesService: CookieService
   ) {}
 
-  @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('sign-up')
   @ApiOperation({ summary: '🎭 sign-up' })
+  @ApiSignUpCreatedResponse()
+  @ApiSignUpBadRequestResponse()
+  @ApiSignUpConflictResponse()
   async signUp(@Body() signUpDto: SignUpDto): Promise<User> {
     const user = await this.authService.signUp(signUpDto);
     if (!user) {

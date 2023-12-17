@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   // ApiCreatedResponse,
   ApiOperation,
   ApiTags,
@@ -25,22 +26,23 @@ import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { UserResponse } from './responses';
 import { E_UserRole, User } from '@prisma/client';
-import { CurrentUser, Roles, UUIDParam } from '@common/decorators';
+import { CurrentUser, Roles, SkipAuth, UUIDParam } from '@common/decorators';
 import { IJwtPayload } from '@modules/auth/interfaces';
 import { RolesGuard } from '@modules/auth/guards/role.guard';
 import { UUID } from 'crypto';
 
 @ApiTags('🙎‍♂️ user service')
-@ApiBearerAuth()
 @Controller('user')
 //decorator for prisma client error handler
 // @UseFilters(PrismaClientExceptionFilter)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @SkipAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   @ApiOperation({ summary: '🎭 create user' })
+  @ApiBody({ type: CreateUserDto })
   // @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto): Promise<User | null> {
     const user = await this.userService.create(createUserDto);
@@ -66,7 +68,7 @@ export class UserController {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userService.findOneByIdOrEmail(id, true);
+    const user = await this.userService.findOneByIdOrEmail(id);
 
     const responseUser = user ? new UserResponse(user) : null;
     return responseUser;
@@ -91,6 +93,7 @@ export class UserController {
     return responseUser;
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   remove(
     @UUIDParam('id') id: string,

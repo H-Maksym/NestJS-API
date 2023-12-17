@@ -3,15 +3,16 @@ import { $Enums, User } from '@prisma/client';
 import { Exclude } from 'class-transformer';
 
 export class UserResponse implements User {
-  @ApiProperty({ nullable: true })
+  @ApiProperty({ description: 'The id of the user' })
   id: string;
 
-  @ApiProperty({ required: false, nullable: true })
+  @ApiProperty({ description: 'The email of the user' })
   email: string;
 
   @Exclude()
   password: string | null;
 
+  @ApiProperty({ description: 'The roles of the user' })
   roles: $Enums.E_UserRole[];
 
   @Exclude()
