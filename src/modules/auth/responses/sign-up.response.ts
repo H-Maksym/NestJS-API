@@ -1,41 +1,50 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { $Enums } from '@prisma/client';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { UserResponse } from '@modules/user/responses';
+
+export class SignUpResponse {
+  @ApiProperty({
+    description: "User's id",
+    example: '41aeb541-3812-4320-8139-58899a66face',
+  })
+  id: string;
+
+  @ApiProperty({ description: "User's email", example: 'test@test.com' })
+  email: string;
+
+  @ApiProperty({ description: "User's roles", example: '["USER"]' })
+  roles: $Enums.E_UserRole[];
+}
 
 export const ApiSignUpCreatedResponse = () =>
   ApiCreatedResponse({
     status: 201,
-    description: 'Created user',
-    type: UserResponse,
-    // content: {
-    //   'application/json': {
-    //     example: {
-    //       id: '45d4f70b-75d5-4524-a2af-c893e63e5c84',
-    //       email: 'test@test.com',
-    //       roles: ['USER'],
-    //     },
-    //   },
-    // },
+    description: 'Successful operation',
+    type: SignUpResponse,
   });
 
 export const ApiSignUpBadRequestResponse = () =>
   ApiBadRequestResponse({
     status: 400,
-    description: 'Invalid input',
+    description: 'Bad request (invalid request body)',
     content: {
       'application/json': {
         example: {
           errors: [
+            'Unable to sign up with data ${JSON.stringify(signUpDto)}',
+            'Field "email" is required',
             'Invalid email format. Please enter a valid email address',
+            'Field "password" is required',
             'password must be a string',
             'Password is too short. Minimal length is $constraint1 characters, but actual is $value',
             'Password is too long. Max length is $constraint1 characters, but actual is $value',
             'repeatPassword must be a string',
+            'Field "passwordRepeat" is required',
             'Passwords do not match',
-            'Unable to sign up with data ${JSON.stringify(signUpDto)',
           ],
           error: 'Bad Request',
           statusCode: 400,
@@ -47,7 +56,7 @@ export const ApiSignUpBadRequestResponse = () =>
 export const ApiSignUpConflictResponse = () =>
   ApiConflictResponse({
     status: 409,
-    description: 'Already registered user',
+    description: 'Provided email already exists',
     content: {
       'application/json': {
         example: {

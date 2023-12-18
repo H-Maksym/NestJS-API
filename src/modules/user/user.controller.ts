@@ -24,12 +24,13 @@ import {
 
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
-import { UserResponse } from './responses';
+
 import { E_UserRole, User } from '@prisma/client';
 import { CurrentUser, Roles, SkipAuth, UUIDParam } from '@common/decorators';
 import { IJwtPayload } from '@modules/auth/interfaces';
 import { RolesGuard } from '@modules/auth/guards/role.guard';
 import { UUID } from 'crypto';
+import { UserResponse } from './responses';
 
 @ApiTags('🙎‍♂️ user service')
 @Controller('user')

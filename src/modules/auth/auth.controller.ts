@@ -26,7 +26,10 @@ import {
   ApiSignUpBadRequestResponse,
   ApiSignUpConflictResponse,
   ApiSignUpCreatedResponse,
-} from './responses/sign-up.decorator';
+  ApiSignInCreatedResponse,
+  ApiSignInUnauthorizedResponse,
+  ApiSignInBadRequestResponse,
+} from './responses';
 
 @ApiTags('⛔ auth service')
 @SkipAuth()
@@ -54,6 +57,9 @@ export class AuthController {
   }
 
   @Post('sign-in')
+  @ApiSignInCreatedResponse()
+  @ApiSignInBadRequestResponse()
+  @ApiSignInUnauthorizedResponse()
   async signIn(
     @Body() signInDto: SignInDto,
     @UserAgent() userAgent: string,
@@ -78,7 +84,7 @@ export class AuthController {
       res
     );
     res.status(HttpStatus.CREATED).json({
-      'access-token': accessToken,
+      accessToken,
     });
   }
 

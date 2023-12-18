@@ -67,7 +67,7 @@ export class AuthService {
     }
 
     if (user.password && !compareSync(signInDto.password, user.password)) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Email or password are invalid');
     }
     const tokens: ITokens = await this.generateTokens(user, userAgent);
 

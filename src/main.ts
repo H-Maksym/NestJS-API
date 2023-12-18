@@ -10,7 +10,9 @@ async function bootstrap() {
 
   //COMMENTS Validation pipe for income data
   //whitelist: true - not adding any fields does not match DTO
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, stopAtFirstError: true })
+  );
 
   //COMMENTS Custom Prisma client exception filter
   // const { httpAdapter } = app.get(HttpAdapterHost);
